@@ -1,0 +1,2 @@
+.card,.card-picked{align-items:center;border:1px solid #000;display:flex;flex-direction:column;justify-content:center}.card-picked{background-color:blue}.card-picked:hover,.card:hover{background-color:pink;transition:.3s}.grid-container{display:grid;grid-template-columns:auto auto auto auto}.image{border:3px solid #000;border-radius:50%;height:190px;margin:5px;width:180px}
+/*# sourceMappingURL=main.8acb67a5.css.map*/
