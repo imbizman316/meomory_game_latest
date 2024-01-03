@@ -1,4 +1,32 @@
-.App {
+* {
+  border: solid 1px black;  
+}
+
+.top {
+  height: 20px;
+  border: solid 1px black;
+  width: 10px;
+  background-color: grey;
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +63,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
