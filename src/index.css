@@ -1,3 +1,16 @@
+#root {  
+  height: 100vh;
+  margin: 0;  
+  background-size: 130px; 
+  background-position: unset; 
+  /* width: 300px;
+  height: 300px; */
+  border: 2px solid pink;
+  /* background-size: 120%;
+  background-repeat: no-repeat;
+  background-position: center; */
+}
+
 .card {
   border: solid 1px black;
   display: flex;
@@ -31,5 +44,6 @@
   border-radius: 50%;
   border: black 3px solid;
   margin: 5px;
+  object-fit: cover;
 }
 

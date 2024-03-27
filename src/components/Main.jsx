@@ -2,20 +2,58 @@ import React from 'react';
 import Data from './Data';
 import Card from './Card';
 import { nanoid, random } from 'nanoid';
+import axios from 'axios';
 
 export default function Main(){
-
-  const testWord = "hello";
-
-  const [word, setWord] = React.useState([]);
-  const [randomCards, setRandomCards] = React.useState(Data);
+ 
+  const [randomCards, setRandomCards] = React.useState([]);
   const [pickedCount, setPickedCount] = React.useState(0);
   const [isClear, setClear] = React.useState(false);
   const [highScore, setHighScore] = React.useState(JSON.parse(localStorage.getItem("Highscore")) || 0);
 
-  const RandomizeCards = () => {
+  const [url, setURL] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [message, setMessage] = React.useState("")
+
+  //-------------Fetch girls data from local server---------------
+  const axiosFetchData = async(processing) => {
+
+    await axios.get('http://localhost:4000/users')
+    .then ( res => {
+      if (processing) {
+        console.log(res.data)
+        setRandomCards(res.data)
+      }
+    })
+    .catch(err => console.log(err))    
+  } 
+
+  const axiosPostData = async() => {
+
+    const postData = {
+      id: randomCards.length + 1,
+      imageURL: url,
+      name: name,
+      isPicked: false,
+    }
+
+    await axios.post('http://localhost:4000/contact', postData)
+    .then(res => setMessage(<p className='success'>{res.data}</p>))
     
-    let count = Data.length;
+  }
+
+  
+
+  //-------------Fetch girls data from local server---------------  
+
+
+  const RandomizeCards = () => {
+
+    //--------------------------------------------------------//    
+
+    //--------------------------------------------------------//
+    
+    let count = randomCards.length;
     let box = [];
 
     for (let i = 0; i < count; i++) {
@@ -36,6 +74,8 @@ export default function Main(){
     setRandomCards(newCards);
 
   }
+
+  
 
   const pickFace = (id) => {
 
@@ -60,7 +100,7 @@ export default function Main(){
       })
     )    
 
-    let count = Data.length;
+    let count = randomCards.length;
     let box = [];
 
     for (let i = 0; i < count; i++) {
@@ -99,23 +139,24 @@ export default function Main(){
   }
 
 
+  //--------------------------------------------------------------
   React.useEffect(() => {
-
-    fetch("https://api.dictionaryapi.dev/api/v2/entries/en/karaoke")
-    .then((response) => response.json())
-    .then((data) => {
-      setWord(data[0].meanings);
-      console.log(data[0].meanings);
-    });
-
-    RandomizeCards();
     
-    
+    // RandomizeCards();
+
+    let processing = true
+    axiosFetchData(processing)
+    return () => {
+      processing = false
+    }
 
   },[])
 
+  //--------------------------------------------------------------
+
   React.useEffect(() => {
     checkScore();
+
   },[randomCards])
 
   React.useEffect(() => {
@@ -136,19 +177,36 @@ export default function Main(){
     
     },[isClear])
 
+  
+
+  function handleAdd() {
+
+    setMessage('')
+    axiosPostData()
+
+  }
+
   return (
     <>
       <div>
-        <h1>Amphibia Memory Game</h1>
+        <h1>Produce 101 Memory Game</h1>
       </div>
       <div>
         <h3>Get points by clicking on an image but don't click on any more than once!</h3>
-      </div>
+        <div>
+          <p>URL:</p>
+          <input type="text" value={url} onChange={(e)=>setURL(e.target.value)}></input>
+        </div>
+        <div>
+          <p>NAME:</p>
+          <input type="text" value={name} onChange={(e)=>setName(e.target.value)}></input>
+        </div>
+        <div>
+          <button onClick={()=>handleAdd()}>ADD</button>
+        </div>
+        {message}
+      </div>    
       
-      <h1>Here is a definition:</h1>
-      {word.map((meaning) => {
-        return <p key={nanoid()}>{meaning.definitions[0].definition}</p>;
-      })}
       
       <h1>Score: {pickedCount} / {randomCards.length}</h1>
       <h1>Highscore: {highScore}</h1>
@@ -164,3 +222,27 @@ export default function Main(){
     </>
   )
 }
+
+
+
+
+
+
+// React.useEffect(() => {
+
+//   fetch("https://api.dictionaryapi.dev/api/v2/entries/en/karaoke")
+//   .then((response) => response.json())
+//   .then((data) => {
+//     setWord(data[0].meanings);
+//     console.log(data[0].meanings);
+//   });
+
+//   RandomizeCards();
+
+// },[])
+
+
+// {/* <h1>Here is a definition:</h1>
+//       {word.map((meaning) => {
+//         return <p key={nanoid()}>{meaning.definitions[0].definition}</p>;
+//       })} */}
